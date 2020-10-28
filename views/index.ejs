@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content= "width=device-width, initial-scale=1.0" />
+<title>Todo List</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+
+<body>
+<div class="container">
+<div class="row">
+
+<form action="/" method="POST">
+<div class="col-md-offset-2 col-md-6 col-sm-offset-1 col-sm-7">
+<input type="text" class="form-control"  name="textTodo" placeholder="create new task"/>
+</div>
+
+<div class="col-md-4 col-sm-4">
+    <button type="submit" class="btn btn-md btn-default" >ADD
+    </button>
+</div>
+</form>
+</div>
+
+<div class="row">
+<div class="col-md-6 col-sm-6">
+<h4>Todo Items</h4>
+<table id="todo">
+	<% for(var i = 0; i <todos.length; i++){%> <% if(todos[i].status == 0){ %>
+<tr>
+	<td><input type="button" name= "todo" value="Done!!" onclick='moveTask(event,"<%= todos[i].id %>")'
+ /> <%= todos[i].task%></td>
+	<td><input type="button" name="todo" value="DELETE" onclick='deleteTask(event,"<%= todos[i].id %>")'/></td>
+  </tr>
+<%} %>
+<%} %>
+
+</table>
+</div>
+
+<div class="col-md-6 col-sm-6">
+<h4>Done Items</h4>
+<table id="done">
+	<% for(var i = 0; i <todos.length; i++){%> <% if(todos[i].status == 1){ %>
+<tr><td>	<input type="button" name="done" value="Forgot to do!!" onclick='moveTask(event,"<%= todos[i].id %>")'/> <%= todos[i].task%> </td>
+	<td><input type="button" name="done" value="DELETE" onclick='deleteTask(event,"<%= todos[i].id %>")'/></td>
+</tr>
+<%} %>
+<%} %>
+
+</ul>
+</div>
+</div>
+</div>
+
+    <script>
+      function moveTask (event, id){
+        const{name} = event.target;
+        fetch('http://localhost:3000/', {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name,
+            id
+          })
+        }).then(response => response.json()).then(status=> {
+          console.log(status);
+          window.location.reload()
+        }).catch(err => console.log(err))
+      }
+
+function deleteTask (event, id){
+        const{name} = event.target;
+        fetch('http://localhost:3000/', {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name,
+            id
+          })
+        }).then(response => response.json()).then(status=> {
+          console.log(status);
+          window.location.reload()
+        }).catch(err => console.log(err))
+      }
+
+
+    </script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+</body>
+</html>
